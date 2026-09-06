@@ -1,0 +1,2 @@
+{ "name": "ace-graphql", "private": true, "type": "commonjs",
+  "dependencies": { "mongodb": "^6.10.0", "graphql": "^16.9.0" } }

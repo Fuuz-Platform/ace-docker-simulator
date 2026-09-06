@@ -1,0 +1,159 @@
+# ACE Docker Simulator — a plant, a historian and a Fuuz-shaped API on one laptop.
+#
+# `docker compose up -d` brings up the whole simulator with NO configuration: an OPC UA server
+# emitting a running plant, a MongoDB time-series historian, a GraphQL API that speaks the same
+# dialect as the Fuuz platform, and a console to watch it all.
+#
+# The orchestrator is the one part that needs something you have to supply — a Fuuz tenant and a
+# token — so it sits behind the `fuuz` profile and is off by default. Everything else is
+# self-contained, which is the difference between a demo you can run and a demo you can read about.
+#
+# INFERENCE IS NOT A SERVICE HERE. `docker model` runs the model host-side on llama.cpp, so it gets
+# the GPU that a Docker Desktop container never can. Measured on 44 strings, same 1024-d model:
+#   Docker Model Runner (Metal)  6.4 ms/string · host LM Studio 9.7 · CPU container 20.9
+# Only the `fuuz` profile needs it.
+
+name: ace-sim
+
+services:
+  # ── the plant ────────────────────────────────────────────────────────────────────────────────
+  # An OPC UA server any client can browse and subscribe to — 8 units x 11 signals, process,
+  # discrete, counter, enum and string tags, with rotating fault states (COMMS, STALE, FLATLINE,
+  # DRIFT) that emit real OPC UA status codes rather than merely looking wrong.
+  ace-sim:
+    build: { context: ., dockerfile: docker/Dockerfile.simulator }
+    ports: ["4840:4840", "4841:4841"]
+    environment:
+      OPCUA_PORT: 4840
+      CONTROL_PORT: 4841
+      TICK_MS: ${SIM_TICK_MS:-2000}
+      PLANT_FILE: /data/plant.json
+    volumes: ["sim-data:/data"]
+    restart: unless-stopped
+
+  # ── the historian's storage ──────────────────────────────────────────────────────────────────
+  # mongodb-atlas-local bundles mongod AND the `mongot` search binary, which is what provides
+  # $vectorSearch. Plain mongodb-community-server does NOT ship mongot; Community 8.2+ supports the
+  # feature but you must run mongot yourself. This image is the supported local-dev shortcut.
+  ace-mongo:
+    image: mongodb/mongodb-atlas-local:latest
+    ports: ["27017:27017"]
+    volumes: ["mongo-data:/data/db"]
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ping:1}).ok' | grep -q 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── a Fuuz-shaped GraphQL API over Mongo ─────────────────────────────────────────────────────
+  # Deliberately mirrors live Fuuz conventions — model(where:{f:{_eq:…}}){edges{node}},
+  # upsert<Model>(payload:[{where,create,update}]), _eq/_in — so code written against this ports to
+  # the platform unchanged. That is the whole point of the exercise.
+  ace-graphql:
+    build: { context: ., dockerfile: docker/Dockerfile.graphql }
+    ports: ["8098:8098"]
+    environment:
+      # Raw-sample retention in days. Only tagValue expires; rollups are the durable record. At the
+      # simulator's write rate this is days, not months — the arithmetic is in graphql/server.js.
+      HISTORIAN_TTL_DAYS: ${HISTORIAN_TTL_DAYS:-3}
+      PORT: 8098
+      MONGO_URL: mongodb://ace-mongo:27017/?directConnection=true
+      MONGO_DB: ace
+      EMBED_DIMS: ${EMBED_DIMS:-1024}
+    depends_on:
+      ace-mongo: { condition: service_healthy }
+    restart: unless-stopped
+
+  # ── OPC UA subscription -> historian ─────────────────────────────────────────────────────────
+  # Fidelity writer: real subscriptions, deadband, and a sample on every quality edge.
+  ace-bridge:
+    build: { context: ., dockerfile: docker/Dockerfile.bridge }
+    ports: ["4842:4842"]
+    environment:
+      OPCUA_ENDPOINT: opc.tcp://ace-sim:4840/UA/AceSim
+      VECTOR_GRAPHQL_URL: http://ace-graphql:8098/graphql
+      FLUSH_MS: ${BRIDGE_FLUSH_MS:-5000}
+      SAMPLING_MS: ${BRIDGE_SAMPLING_MS:-1000}
+      CONTROL_PORT: 4842
+    depends_on:
+      ace-sim: { condition: service_started }
+      ace-graphql: { condition: service_started }
+    restart: unless-stopped
+
+  # ── volume writer ────────────────────────────────────────────────────────────────────────────
+  # Writes straight to Mongo: a per-sample GraphQL hop bottlenecks long before the database does,
+  # and real collectors speak the storage protocol too. Off by default — turn it on to size things.
+  #   docker compose --profile load up -d
+  ace-loadgen:
+    profiles: ["load"]
+    build: { context: ., dockerfile: docker/Dockerfile.loadgen }
+    environment:
+      MONGO_URL: mongodb://ace-mongo:27017/?directConnection=true
+      TAGS: ${LOADGEN_TAGS:-2000}
+      RATE: ${LOADGEN_RATE:-2000}
+      BATCH_MS: ${LOADGEN_BATCH_MS:-250}
+    depends_on:
+      ace-mongo: { condition: service_healthy }
+    restart: unless-stopped
+
+  # ── operations console ───────────────────────────────────────────────────────────────────────
+  # React behind nginx, which reverse-proxies every service under /api/*. Same-origin by
+  # construction, so there is no CORS anywhere and the app uses identical paths in dev and here.
+  ace-ui:
+    build: { context: ., dockerfile: docker/Dockerfile.ui }
+    ports: ["8081:8080"]
+    depends_on:
+      ace-graphql: { condition: service_started }
+      ace-sim: { condition: service_started }
+    restart: unless-stopped
+
+  # ── ACE itself: match + classify against a live Fuuz tenant ──────────────────────────────────
+  # Needs a tenant and a token, so it is opt-in:
+  #   cp .env.example .env   # fill in FUUZ_HOST / FUUZ_TENANT / FUUZ_TOKEN
+  #   docker compose --profile fuuz up -d
+  ace-orchestrator:
+    profiles: ["fuuz"]
+    build: { context: ., dockerfile: docker/Dockerfile.orchestrator }
+    ports: ["8099:8099"]
+    environment:
+      PORT: 8099
+      # Empty defaults, NOT `${VAR:?...}` guards. Compose interpolates the whole file before it
+      # filters profiles, so a required-variable guard on this opt-in service makes the plain
+      # `docker compose up` fail as well. The orchestrator reports a missing token itself.
+      FUUZ_HOST: ${FUUZ_HOST:-}
+      FUUZ_TOKEN: ${FUUZ_TOKEN:-}
+      FUUZ_TENANT: ${FUUZ_TENANT:-}
+      EMBED_URL: ${EMBED_URL:-http://model-runner.docker.internal/engines/v1}
+      EMBED_API: ${EMBED_API:-openai}
+      EMBED_MODEL: ${EMBED_MODEL:-huggingface.co/ggml-org/bge-m3-q8_0-gguf}
+      EMBED_DIMS: ${EMBED_DIMS:-1024}
+      VECTOR_GRAPHQL_URL: http://ace-graphql:8098/graphql
+      LLM_URL: ${LLM_URL:-http://model-runner.docker.internal/engines/v1}
+      LLM_MODEL: ${LLM_MODEL:-docker.io/ai/qwen3}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      EMBED_API_KEY: ${EMBED_API_KEY:-}
+      DEVICE_GATEWAY_URL: ${DEVICE_GATEWAY_URL:-http://host.docker.internal:5500}
+      ACE_DROP_DIR: /data/drop
+      ACE_DOCS_STATE: /data/docs.json
+      # Must be vision-capable — a text-only model will answer confidently about an image it
+      # never received.
+      VISION_URL: ${VISION_URL:-http://model-runner.docker.internal/engines/v1}
+      VISION_MODEL: ${VISION_MODEL:-docker.io/ai/qwen2.5-vl}
+      VISION_API_KEY: ${VISION_API_KEY:-}
+      DOC_EXTERNAL_SYSTEM: ${DOC_EXTERNAL_SYSTEM:-PID-DWG}
+      DOC_DEST_MODEL: ${DOC_DEST_MODEL:-WorkUnit}
+    volumes:
+      # Bind-mounted, not a named volume: the point is that you can drop a drawing in from the host.
+      - ./drop:/data/drop
+      - docs-data:/data
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    depends_on:
+      ace-graphql: { condition: service_started }
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+  sim-data:
+  docs-data:

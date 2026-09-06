@@ -1,0 +1,2 @@
+{ "name": "ace-sim", "private": true, "type": "commonjs",
+  "dependencies": { "node-opcua": "^2.134.0" } }

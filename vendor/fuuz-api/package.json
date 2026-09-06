@@ -1,0 +1,7 @@
+{
+  "name": "@fuuz/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Direct GraphQL client for a Fuuz tenant. Shared by every accelerator that authors or seeds a tenant.",
+  "main": "index.js"
+}

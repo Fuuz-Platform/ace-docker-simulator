@@ -1,0 +1,8 @@
+{
+  "name": "ace-docker-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "ACE Docker Simulator — an OPC UA plant, a MongoDB time-series historian and a Fuuz-shaped GraphQL API, in one docker compose up.",
+  "license": "UNLICENSED"
+}

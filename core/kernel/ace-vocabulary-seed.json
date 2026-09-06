@@ -1,0 +1,536 @@
+{
+  "id": "MEASUREMENT_VOCAB_V1",
+  "description": "Controlled vocabulary + classification rules for ctx-classify-measurement. Ships as data: `measurementTypes` seeds the MeasurementType lookup, everything else is the ClassificationProfile row. A plant with its own naming conventions edits the token maps rather than the kernel.",
+  "_conventionNote": "Token and suffix conventions below are the ones present in this project's own simulated corpora and in common integrator practice (_SP setpoint, _PV process variable, TT/PT/LT/FT instrument letters). They are a customer-editable rule table, not a reproduction of any published standard \u2014 extend per site.",
+  "measurementTypes": [
+    {
+      "id": "SPEED",
+      "name": "Speed",
+      "category": "Motion",
+      "defaultUom": "RPM",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "TEMPERATURE",
+      "name": "Temperature",
+      "category": "Process",
+      "defaultUom": "degF",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "PRESSURE",
+      "name": "Pressure",
+      "category": "Process",
+      "defaultUom": "psi",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "FLOW",
+      "name": "Flow Rate",
+      "category": "Process",
+      "defaultUom": "gpm",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "LEVEL",
+      "name": "Level",
+      "category": "Process",
+      "defaultUom": "pct",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "VIBRATION",
+      "name": "Vibration",
+      "category": "Condition",
+      "defaultUom": "mm/s",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "CURRENT",
+      "name": "Motor Current",
+      "category": "Electrical",
+      "defaultUom": "A",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "VOLTAGE",
+      "name": "Voltage",
+      "category": "Electrical",
+      "defaultUom": "V",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "POWER",
+      "name": "Power",
+      "category": "Electrical",
+      "defaultUom": "kW",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "TORQUE",
+      "name": "Torque",
+      "category": "Motion",
+      "defaultUom": "Nm",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "WEIGHT",
+      "name": "Weight",
+      "category": "Process",
+      "defaultUom": "kg",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "CYCLE_TIME",
+      "name": "Cycle Time",
+      "category": "Performance",
+      "defaultUom": "s",
+      "defaultRole": "PROCESS_VAR"
+    },
+    {
+      "id": "RUNTIME",
+      "name": "Runtime",
+      "category": "Performance",
+      "defaultUom": "hr",
+      "defaultRole": "COUNTER"
+    },
+    {
+      "id": "COUNT_GOOD",
+      "name": "Good Count",
+      "category": "Production",
+      "defaultUom": "ea",
+      "defaultRole": "COUNTER"
+    },
+    {
+      "id": "COUNT_REJECT",
+      "name": "Reject Count",
+      "category": "Production",
+      "defaultUom": "ea",
+      "defaultRole": "COUNTER"
+    },
+    {
+      "id": "COUNT_TOTAL",
+      "name": "Total Count",
+      "category": "Production",
+      "defaultUom": "ea",
+      "defaultRole": "COUNTER"
+    },
+    {
+      "id": "RUN_STATE",
+      "name": "Run State",
+      "category": "State",
+      "defaultUom": "",
+      "defaultRole": "STATE"
+    },
+    {
+      "id": "FAULT_STATE",
+      "name": "Fault State",
+      "category": "State",
+      "defaultUom": "",
+      "defaultRole": "STATE"
+    },
+    {
+      "id": "MODE",
+      "name": "Operating Mode",
+      "category": "State",
+      "defaultUom": "",
+      "defaultRole": "STATE"
+    },
+    {
+      "id": "BATCH_ID",
+      "name": "Batch identifier",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    },
+    {
+      "id": "LOT_ID",
+      "name": "Lot identifier",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    },
+    {
+      "id": "SERIAL_ID",
+      "name": "Serial number",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    },
+    {
+      "id": "ORDER_ID",
+      "name": "Work order identifier",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    },
+    {
+      "id": "PRODUCT_ID",
+      "name": "Product identifier",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    },
+    {
+      "id": "RECIPE_ID",
+      "name": "Recipe identifier",
+      "category": "Identity",
+      "defaultUom": null,
+      "defaultRole": "CONTEXT"
+    }
+  ],
+  "_uomNote": "UOM is machine-set by the driver and is the single most reliable signal \u2014 but it is not always unique. Multi-valued entries force a token to disambiguate rather than letting the classifier guess.",
+  "uomAliases": {
+    "RPM": "RPM",
+    "R/MIN": "RPM",
+    "DEGF": "degF",
+    "F": "degF",
+    "\u00b0F": "degF",
+    "FAHRENHEIT": "degF",
+    "DEGC": "degC",
+    "C": "degC",
+    "\u00b0C": "degC",
+    "CELSIUS": "degC",
+    "PSI": "psi",
+    "PSIG": "psi",
+    "BAR": "psi",
+    "KPA": "psi",
+    "MM/S": "mm/s",
+    "IN/S": "mm/s",
+    "MMS": "mm/s",
+    "A": "A",
+    "AMP": "A",
+    "AMPS": "A",
+    "V": "V",
+    "VOLT": "V",
+    "VOLTS": "V",
+    "KW": "kW",
+    "W": "kW",
+    "GPM": "gpm",
+    "LPM": "gpm",
+    "L/MIN": "gpm",
+    "PCT": "pct",
+    "%": "pct",
+    "PERCENT": "pct",
+    "EA": "ea",
+    "COUNT": "ea",
+    "PCS": "ea",
+    "PARTS": "ea",
+    "S": "s",
+    "SEC": "s",
+    "SECONDS": "s",
+    "MS": "s",
+    "HR": "hr",
+    "HRS": "hr",
+    "HOURS": "hr",
+    "KG": "kg",
+    "LB": "kg",
+    "LBS": "kg",
+    "G": "kg",
+    "NM": "Nm"
+  },
+  "uomToType": {
+    "RPM": [
+      "SPEED"
+    ],
+    "degF": [
+      "TEMPERATURE"
+    ],
+    "degC": [
+      "TEMPERATURE"
+    ],
+    "psi": [
+      "PRESSURE"
+    ],
+    "mm/s": [
+      "VIBRATION"
+    ],
+    "A": [
+      "CURRENT"
+    ],
+    "V": [
+      "VOLTAGE"
+    ],
+    "kW": [
+      "POWER"
+    ],
+    "gpm": [
+      "FLOW"
+    ],
+    "Nm": [
+      "TORQUE"
+    ],
+    "kg": [
+      "WEIGHT"
+    ],
+    "hr": [
+      "RUNTIME"
+    ],
+    "pct": [
+      "LEVEL",
+      "VALVE_POSITION",
+      "HUMIDITY"
+    ],
+    "ea": [
+      "COUNT_GOOD",
+      "COUNT_REJECT",
+      "COUNT_TOTAL"
+    ],
+    "s": [
+      "CYCLE_TIME",
+      "RUNTIME"
+    ]
+  },
+  "_tokenNote": "Strong tokens decide on their own. Weak tokens (single letters, heavily overloaded words) apply only when nothing stronger fired.",
+  "tokenToType": {
+    "TEMP": "TEMPERATURE",
+    "TMP": "TEMPERATURE",
+    "TEMPERATURE": "TEMPERATURE",
+    "TT": "TEMPERATURE",
+    "TE": "TEMPERATURE",
+    "SPEED": "SPEED",
+    "SPD": "SPEED",
+    "RUNSPEED": "SPEED",
+    "RPM": "SPEED",
+    "ST": "SPEED",
+    "PRESS": "PRESSURE",
+    "PRESSURE": "PRESSURE",
+    "PT": "PRESSURE",
+    "DISCH": "PRESSURE",
+    "FLOW": "FLOW",
+    "FT": "FLOW",
+    "LEVEL": "LEVEL",
+    "LVL": "LEVEL",
+    "LT": "LEVEL",
+    "VIB": "VIBRATION",
+    "VIBRATION": "VIBRATION",
+    "VT": "VIBRATION",
+    "AMP": "CURRENT",
+    "AMPS": "CURRENT",
+    "CURRENT": "CURRENT",
+    "VOLT": "VOLTAGE",
+    "VOLTS": "VOLTAGE",
+    "POWER": "POWER",
+    "KW": "POWER",
+    "TORQUE": "TORQUE",
+    "WEIGHT": "WEIGHT",
+    "WGT": "WEIGHT",
+    "CYCLE": "CYCLE_TIME",
+    "CYCLETIME": "CYCLE_TIME",
+    "CYC": "CYCLE_TIME",
+    "CT": "CYCLE_TIME",
+    "RUNTIME": "RUNTIME",
+    "HOURS": "RUNTIME",
+    "KT": "RUNTIME",
+    "GOOD": "COUNT_GOOD",
+    "GOODCOUNT": "COUNT_GOOD",
+    "GOODPARTS": "COUNT_GOOD",
+    "PARTSGOOD": "COUNT_GOOD",
+    "REJECT": "COUNT_REJECT",
+    "REJ": "COUNT_REJECT",
+    "SCRAP": "COUNT_REJECT",
+    "BAD": "COUNT_REJECT",
+    "BADCOUNT": "COUNT_REJECT",
+    "TOTAL": "COUNT_TOTAL",
+    "TOTALCOUNT": "COUNT_TOTAL",
+    "RUNNING": "RUN_STATE",
+    "RUN": "RUN_STATE",
+    "RUNBIT": "RUN_STATE",
+    "ISRUNNING": "RUN_STATE",
+    "RUNSTS": "RUN_STATE",
+    "YT": "RUN_STATE",
+    "FAULT": "FAULT_STATE",
+    "FAULTED": "FAULT_STATE",
+    "FLT": "FAULT_STATE",
+    "ALARM": "FAULT_STATE",
+    "FAULTBIT": "FAULT_STATE",
+    "MODE": "MODE",
+    "OPMODE": "MODE",
+    "MODEWORD": "MODE",
+    "BATCHID": "BATCH_ID",
+    "BATCH": "BATCH_ID",
+    "BATCHNO": "BATCH_ID",
+    "BATCHNUM": "BATCH_ID",
+    "LOTID": "LOT_ID",
+    "LOT": "LOT_ID",
+    "LOTNO": "LOT_ID",
+    "SERIAL": "SERIAL_ID",
+    "SERIALNO": "SERIAL_ID",
+    "SN": "SERIAL_ID",
+    "ORDERID": "ORDER_ID",
+    "WORKORDER": "ORDER_ID",
+    "WO": "ORDER_ID",
+    "ORDERNO": "ORDER_ID",
+    "PRODUCTID": "PRODUCT_ID",
+    "SKU": "PRODUCT_ID",
+    "PARTNO": "PRODUCT_ID",
+    "PARTNUM": "PRODUCT_ID",
+    "RECIPEID": "RECIPE_ID",
+    "RECIPE": "RECIPE_ID",
+    "FORMULA": "RECIPE_ID"
+  },
+  "weakTokenToType": {
+    "I": "CURRENT",
+    "IMTR": "CURRENT",
+    "P": "PRESSURE",
+    "T": "TEMPERATURE",
+    "L": "LEVEL",
+    "STS": "RUN_STATE",
+    "STATE": "RUN_STATE"
+  },
+  "_noiseTokens": "stripped before token lookup \u2014 they qualify a measurement without naming one",
+  "noiseTokens": [
+    "MTR",
+    "MOTOR",
+    "DRIVE",
+    "PV",
+    "SP",
+    "CV",
+    "FB",
+    "FBK",
+    "ACT",
+    "ACTUAL",
+    "CMD",
+    "VALUE",
+    "VAL",
+    "TAG",
+    "OUT",
+    "IN",
+    "RAW",
+    "SCALED",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "_roleNote": "Role is answered by BEHAVIOUR first and vocabulary second \u2014 the opposite of type. An explicit _SP/_PV suffix outranks both because it is a deliberate statement of intent.",
+  "roleSuffix": {
+    "SP": "SETPOINT",
+    "SETPOINT": "SETPOINT",
+    "CMD": "SETPOINT",
+    "TARGET": "SETPOINT",
+    "REF": "SETPOINT",
+    "PV": "PROCESS_VAR",
+    "FB": "PROCESS_VAR",
+    "FBK": "PROCESS_VAR",
+    "ACT": "PROCESS_VAR",
+    "ACTUAL": "PROCESS_VAR"
+  },
+  "behaviour": {
+    "booleanIsState": true,
+    "monotonicIsCounter": true,
+    "setpointMaxChangeRatio": 0.05,
+    "setpointMaxDistinct": 6,
+    "stateMaxDistinct": 8,
+    "minSamplesForBehaviour": 20,
+    "udtMinInstances": 2,
+    "udtMinAgreement": 0.75
+  },
+  "_confidenceNote": "Auto-apply is deliberately generous (0.80) because classification is reversible and low blast-radius \u2014 unlike equipment assignment, which needs a human. Everything below `review` is left null rather than guessed.",
+  "confidence": {
+    "tokenAndUomAgree": 0.97,
+    "uomMultiNarrowedByToken": 0.93,
+    "uomUnique": 0.9,
+    "strongToken": 0.88,
+    "behaviourOnly": 0.72,
+    "weakToken": 0.62,
+    "conflict": 0.55
+  },
+  "thresholds": {
+    "autoApply": 0.8,
+    "review": 0.55
+  },
+  "_configEvidenceNote": "Ignition's engLow/engHigh and valueSource are CONFIG properties, not history \u2014 readable in the same cheap query as the name. They stand in for the two behaviours that would otherwise force value sampling: a huge integer engineering range implies a tally, and valueSource=memory implies nothing upstream writes a reading (i.e. a setpoint).",
+  "configEvidence": {
+    "counterMinEngHigh": 10000,
+    "rangeVetoFactor": 20,
+    "sourceRoleHints": {
+      "memory": "SETPOINT",
+      "expr": null,
+      "opc": null,
+      "db": null,
+      "derived": null,
+      "reference": null
+    }
+  },
+  "_typeRangesNote": "Used only as a VETO \u2014 engineering ranges overlap far too much to classify on their own, but a 'temperature' configured 0..1000000 is a mislabelled counter.",
+  "typeRanges": {
+    "SPEED": [
+      0,
+      3600
+    ],
+    "TEMPERATURE": [
+      -50,
+      1200
+    ],
+    "PRESSURE": [
+      0,
+      600
+    ],
+    "LEVEL": [
+      0,
+      100
+    ],
+    "VIBRATION": [
+      0,
+      50
+    ],
+    "CURRENT": [
+      0,
+      1000
+    ],
+    "VOLTAGE": [
+      0,
+      1000
+    ],
+    "POWER": [
+      0,
+      5000
+    ],
+    "FLOW": [
+      0,
+      5000
+    ],
+    "CYCLE_TIME": [
+      0,
+      600
+    ],
+    "TORQUE": [
+      0,
+      5000
+    ],
+    "WEIGHT": [
+      0,
+      10000
+    ],
+    "COUNT_GOOD": [
+      0,
+      100000000
+    ],
+    "COUNT_REJECT": [
+      0,
+      100000000
+    ],
+    "COUNT_TOTAL": [
+      0,
+      100000000
+    ],
+    "RUNTIME": [
+      0,
+      1000000
+    ],
+    "RUN_STATE": [
+      0,
+      1
+    ],
+    "FAULT_STATE": [
+      0,
+      1
+    ],
+    "MODE": [
+      0,
+      64
+    ]
+  },
+  "_identityNote": "Context tags carry identity, not measurement: a BatchId is what joins a time series to genealogy. They have no unit and never trend, so behaviour evidence cannot reach them \u2014 only a name token can, which is why every common spelling is listed."
+}
