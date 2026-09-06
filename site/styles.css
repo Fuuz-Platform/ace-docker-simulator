@@ -126,7 +126,7 @@ a:hover { color: var(--fuuz-white); }
 /* Ground texture: the supporting graphic at very low contrast. Never a gradient wash. */
 .hero::before {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: url('assets/bg-geometric.png') center / cover no-repeat;
+  background: url('assets/bg-geometric.jpg') center / cover no-repeat;
   opacity: .05;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
           mask-image: linear-gradient(to bottom, #000 0%, transparent 92%);
