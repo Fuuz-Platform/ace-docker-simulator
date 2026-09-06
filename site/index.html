@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ACE Docker Simulator — Fuuz Accelerator</title>
-<meta name="description" content="An OPC UA plant simulator, a MongoDB time-series historian and a Fuuz-shaped GraphQL API, running on your laptop in one docker compose up. Open accelerator from the Fuuz Industrial Operations Platform.">
+<meta name="description" content="An OPC UA plant simulator, a MongoDB time-series historian and a Fuuz-shaped GraphQL API, running on your laptop in one docker compose up. An open accelerator for the Fuuz Enterprise Industrial Intelligence Platform.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://accelerators.fuuz.com/ace-docker-simulator/">
 <meta property="og:type" content="website">
@@ -14,17 +14,15 @@
 <meta property="og:description" content="A running plant, a real industrial historian and a Fuuz-shaped GraphQL API on your laptop, in one command.">
 <meta property="og:image" content="https://accelerators.fuuz.com/ace-docker-simulator/img/console.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="icon" href="assets/appicon-violet.svg">
 <link rel="stylesheet" href="styles.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "ACE Docker Simulator",
-  "description": "An OPC UA plant simulator, a MongoDB time-series historian and a Fuuz-shaped GraphQL API, runnable in one docker compose up.",
   "url": "https://accelerators.fuuz.com/ace-docker-simulator/",
+  "description": "An OPC UA plant simulator, a MongoDB time-series historian and a Fuuz-shaped GraphQL API, runnable in one docker compose up.",
   "codeRepository": "https://github.com/Fuuz-Platform/ace-docker-simulator",
   "programmingLanguage": ["JavaScript", "GraphQL"],
   "runtimePlatform": "Docker",
@@ -38,7 +36,8 @@
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="../">Fuuz <span>Accelerators</span></a>
+    <a class="logo" href="../"><img src="assets/logo-horizontal-on-midnight.svg" alt="Fuuz"></a>
+    <span class="section">Accelerators</span>
     <nav>
       <a href="#start">Quick start</a>
       <a href="#stack">What runs</a>
@@ -50,11 +49,11 @@
 
 <main>
 <div class="wrap hero">
-  <span class="eyebrow">Accelerator · Open</span>
-  <h1>A plant, a historian and a&nbsp;Fuuz-shaped API on your laptop.</h1>
+  <p class="eyebrow">Accelerator &middot; Runs on your machine</p>
+  <h1>A Plant, A Historian And An API On Your <span class="accent">Laptop</span></h1>
   <p class="lede">
     The ACE Docker Simulator runs a live OPC UA plant, records it into a MongoDB time-series
-    historian, and serves it through a GraphQL API that speaks the same dialect as the Fuuz
+    historian, and serves it through a GraphQL API that speaks the same dialect as the Fuuz&reg;
     platform &mdash; so what you build against it ports to a real tenant unchanged.
   </p>
   <div class="cmd">
@@ -63,6 +62,10 @@
   <div class="cmd">
     <span class="prompt">&rarr;</span><code>http://localhost:8081</code>
     <span class="note">No configuration. No account. No tenant required.</span>
+  </div>
+  <div class="ctas">
+    <a class="cta cta-primary" href="#start">Start here</a>
+    <a class="cta cta-secondary" href="https://github.com/Fuuz-Platform/ace-docker-simulator">Read the source</a>
   </div>
   <div class="chips">
     <span class="chip">88 live tags</span>
@@ -75,46 +78,55 @@
 
 <section id="stack">
   <div class="wrap">
-    <h2>What runs</h2>
-    <p class="sec-lede">Five containers start by default. Two more are opt-in, because they need
-      something only you can supply.</p>
+    <p class="sec-eyebrow">What runs</p>
+    <h2>Five Containers, No <span class="accent">Configuration</span></h2>
+    <p class="sec-lede">Two more are opt-in, because they need something only you can supply.</p>
     <div class="grid">
       <div class="card">
-        <h3>ace-sim <span class="port">:4840 · :4841</span></h3>
+        <h3>ace-sim</h3>
         <p>An OPC UA server any client can browse and subscribe to. Eight units &times; eleven
           signals &mdash; process, discrete, counter, enum and string &mdash; with rotating fault
           states (COMMS, STALE, FLATLINE, DRIFT) that emit real OPC UA status codes rather than
           merely looking wrong.</p>
+        <div class="meta">:4840 &middot; :4841</div>
       </div>
       <div class="card">
-        <h3>ace-mongo <span class="port">:27017</span></h3>
+        <h3>ace-mongo</h3>
         <p>MongoDB with the <code>mongot</code> search binary bundled, which is what provides
           <code>$vectorSearch</code>. Plain community server does not ship it.</p>
+        <div class="meta">:27017</div>
       </div>
       <div class="card">
-        <h3>ace-graphql <span class="port">:8098</span></h3>
-        <p>A Fuuz-shaped API over Mongo &mdash; <code>edges/node</code>, <code>where:{f:{_eq}}</code>,
-          <code>upsert&lt;Model&gt;(payload:[…])</code> &mdash; plus the historian query surface.</p>
+        <h3>ace-graphql</h3>
+        <p>A Fuuz-shaped API over MongoDB &mdash; <code>edges/node</code>,
+          <code>where:{f:{_eq}}</code>, <code>upsert&lt;Model&gt;(payload:[…])</code> &mdash; plus
+          the historian query surface.</p>
+        <div class="meta">:8098</div>
       </div>
       <div class="card">
-        <h3>ace-bridge <span class="port">:4842</span></h3>
+        <h3>ace-bridge</h3>
         <p>The fidelity writer. Real OPC UA subscriptions with deadband, and a stored sample on
           every quality edge.</p>
+        <div class="meta">:4842</div>
       </div>
       <div class="card">
-        <h3>ace-ui <span class="port">:8081</span></h3>
+        <h3>ace-ui</h3>
         <p>The operations console. React behind nginx, which reverse-proxies every service under
-          <code>/api/*</code> &mdash; same-origin by construction, so there is no CORS anywhere.</p>
+          <code>/api/*</code> &mdash; same-origin by construction, so there is no cross-origin
+          configuration anywhere.</p>
+        <div class="meta">:8081</div>
       </div>
-      <div class="card opt">
-        <h3>ace-loadgen <span class="tag">profile: load</span></h3>
-        <p>The volume writer. Straight to Mongo, because a per-sample GraphQL hop bottlenecks long
-          before the database does &mdash; which is also how real collectors work.</p>
+      <div class="card">
+        <h3>ace-loadgen<span class="tag">profile: load</span></h3>
+        <p>The volume writer. Straight to MongoDB, because a per-sample GraphQL hop bottlenecks
+          long before the database does &mdash; which is also how real collectors work.</p>
+        <div class="meta">opt-in</div>
       </div>
-      <div class="card opt">
-        <h3>ace-orchestrator <span class="tag">profile: fuuz</span></h3>
+      <div class="card">
+        <h3>ace-orchestrator<span class="tag">profile: fuuz</span></h3>
         <p>ACE itself: deterministic matching and signal classification against a live Fuuz tenant.
           Needs a host, a tenant and a token, so it stays off by default.</p>
+        <div class="meta">:8099 &middot; opt-in</div>
       </div>
     </div>
   </div>
@@ -122,10 +134,11 @@
 
 <section>
   <div class="wrap">
-    <h2>The console</h2>
-    <p class="sec-lede">Plant state, historian throughput and fault distribution, thirty seconds
-      after the clone.</p>
-    <div class="diagram">
+    <p class="sec-eyebrow">The console</p>
+    <h2>Thirty Seconds After The <span class="accent">Clone</span></h2>
+    <p class="sec-lede">Plant state, historian throughput and fault distribution, with nothing
+      configured.</p>
+    <div class="figure">
       <img src="img/console.png" alt="The ACE operations console: simulator up with 88 tags, historian up with 3,028 samples, vector index ready, and a bar chart of plant units by fault state." width="1440" height="430" loading="lazy">
     </div>
   </div>
@@ -133,17 +146,18 @@
 
 <section id="historian">
   <div class="wrap">
-    <h2>A historian, not a table of numbers</h2>
-    <p class="sec-lede">Most "historian" demos store a timestamp and a float. That model quietly
-      lies about a real plant in five specific ways, and each one is fixed here.</p>
+    <p class="sec-eyebrow">The historian</p>
+    <h2>A Historian, Not A Table Of <span class="accent">Numbers</span></h2>
+    <p class="sec-lede">Most simulator demos store a timestamp and a float. That model quietly lies
+      about a real plant in five specific ways, and each one is fixed here.</p>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Capability</th><th>Why it is not optional</th></tr></thead>
         <tbody>
           <tr><td>Quality on every sample</td><td>Bad samples are <strong>stored</strong>, not dropped &mdash; discarding them hides outages and makes coverage a lie. Aggregates exclude them and report <code>badSamples</code> separately.</td></tr>
-          <tr><td>Two timestamps</td><td>Source time and receive time. The difference is late arrival: gateway store-and-forward replays hours-old samples out of order after a WAN outage, and <code>latencyMs</code> makes that visible.</td></tr>
+          <tr><td>Two timestamps</td><td>Source time and receive time. The difference is late arrival: gateway store-and-forward replays hours-old samples out of order after a wide-area network outage, and <code>latencyMs</code> makes that visible.</td></tr>
           <tr><td>Typed values</td><td><code>Running=1</code> and <code>Speed=1.0</code> are not the same kind of fact. Process is float, discrete is bool, enum is int, batch context is string.</td></tr>
-          <tr><td>Interpolation per tag</td><td>Continuous tags interpolate; discrete tags are step functions. Linear interpolation of a state signal <em>invents states that never happened</em>.</td></tr>
+          <tr><td>Interpolation per tag</td><td>Continuous tags interpolate; discrete tags are step functions. Linear interpolation of a state signal <strong>invents states that never happened</strong>.</td></tr>
           <tr><td>Time-weighted aggregates</td><td>Exception-based samples are irregular, so an arithmetic mean over-weights whatever happened to be sampled often. Continuous tags get a time-weighted mean; discrete tags get state durations and transition counts.</td></tr>
         </tbody>
       </table>
@@ -159,12 +173,13 @@
 
 <section>
   <div class="wrap">
-    <h2>Measured, not estimated</h2>
-    <p class="sec-lede">Numbers from a sustained run on an Apple M5 Max. Reproduce them with
+    <p class="sec-eyebrow">Measured</p>
+    <h2>Numbers From A Sustained <span class="accent">Run</span></h2>
+    <p class="sec-lede">Measured on an Apple M5 Max. Reproduce them with
       <code>docker compose --profile load up -d</code>.</p>
     <div class="metrics">
-      <div class="metric"><div class="n">24,415<span style="font-size:16px;font-weight:500">/s</span></div><div class="l">samples sustained across 20,000 tags, zero errors</div></div>
-      <div class="metric"><div class="n">6.1 <span style="font-size:16px;font-weight:500">bytes</span></div><div class="l">per sample on disk &mdash; 2.1&times; compression</div></div>
+      <div class="metric"><div class="n">24,415<span class="unit">/s</span></div><div class="l">samples sustained across 20,000 tags, zero errors</div></div>
+      <div class="metric"><div class="n">6.1<span class="unit"> bytes</span></div><div class="l">per sample on disk &mdash; 2.1&times; compression</div></div>
       <div class="metric"><div class="n">14.45M</div><div class="l">samples stored in the measured run</div></div>
       <div class="metric"><div class="n">99.18%</div><div class="l">Good quality; the rest split across Bad, Stale and OutOfRange</div></div>
     </div>
@@ -173,8 +188,9 @@
 
 <section id="start">
   <div class="wrap">
-    <h2>Quick start</h2>
-    <p class="sec-lede">Docker is the only prerequisite.</p>
+    <p class="sec-eyebrow">Quick start</p>
+    <h2>Docker Is The Only <span class="accent">Prerequisite</span></h2>
+    <p class="sec-lede">Four steps, and the fourth is optional.</p>
     <ol class="steps">
       <li>
         <h3>Clone and start</h3>
@@ -186,13 +202,13 @@ docker compose up -d</pre>
       </li>
       <li>
         <h3>Open the console</h3>
-        <p><a href="http://localhost:8081">localhost:8081</a> &mdash; the plant is already running and
-          the bridge is already recording it.</p>
+        <p><code>localhost:8081</code> &mdash; the plant is already running and the bridge is
+          already recording it.</p>
       </li>
       <li>
         <h3>Ask the historian something</h3>
         <p>The behavioural statistics that drive signal classification are computed
-          <em>in the database</em>, so the client never streams raw history.</p>
+          <strong>in the database</strong>, so the client never streams raw history.</p>
 <pre>curl localhost:8098/graphql -H 'content-type: application/json' -d '{
   "query": "{ historianStatus { name status count } }"
 }'</pre>
@@ -214,6 +230,9 @@ docker compose --profile fuuz up -d</pre>
     <span>A Fuuz accelerator.</span>
     <nav>
       <a href="../">All accelerators</a>
+      <a href="https://academy.fuuz.com">Academy</a>
+      <a href="https://support.fuuz.com">Support</a>
+      <a href="https://status.fuuz.app">Status</a>
       <a href="https://github.com/Fuuz-Platform/ace-docker-simulator">Source</a>
       <a href="https://fuuz.com">fuuz.com</a>
     </nav>
