@@ -1,7 +1,7 @@
 # ace-docker-simulator
 
 > **Fuuz Industrial Operations Platform — ACE Docker Simulator**
-> Version: `1.0.0` | Docs: **https://fuuz-platform.github.io/ace-docker-simulator/**
+> Version: `1.0.0` | Docs: **https://accelerators.fuuz.com/ace-docker-simulator/**
 
 A running plant, a real industrial historian and a Fuuz-shaped GraphQL API, on your laptop, in one
 command. Part of **ACE** (Auto Contextualization Engine) from the
