@@ -33,7 +33,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      # enablement: true turns Pages on if it is not already. Without it, the FIRST push to a new
+      # accelerator repo fails — the workflow runs before anyone has visited Settings -> Pages —
+      # and the failure reads as a broken workflow rather than a missing setting.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
