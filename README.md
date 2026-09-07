@@ -125,3 +125,9 @@ site/                  the published documentation site
 ## Licence
 
 No open-source licence is granted. © Fuuz. Published for Fuuz customers, partners and evaluators.
+
+## Service levels
+
+No service level agreement applies to anything published here. It becomes a supported
+deliverable only once it has been implemented by a Fuuz services professional or an
+approved Fuuz partner.
