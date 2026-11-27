@@ -10,7 +10,7 @@
     ],
     "mainImage": {
       "file": "images/main.png",
-      "alt": "ACE Docker Simulator: Fuuz title card"
+      "alt": "ACE Docker Simulator: Fuuz cover"
     },
     "description": [
       "Part of ACE (Auto Contextualization Engine) from the Fuuz Industrial Operations Platform. Five containers stand up an OPC UA server with 88 simulated tags across 8 units (with realistic COMMS, STALE, FLATLINE and DRIFT faults), a MongoDB time-series historian, a Fuuz-shaped GraphQL API, an OPC UA-to-historian bridge and an operations console.",
