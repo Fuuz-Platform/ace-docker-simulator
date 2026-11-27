@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "visibility": "public",
+  "overview": {
+    "tagline": "A running plant, a real industrial historian and a Fuuz-shaped GraphQL API on your own machine, in one command.",
+    "categories": [
+      "Edge",
+      "IoT",
+      "Simulation"
+    ],
+    "mainImage": {
+      "file": "images/main.png",
+      "alt": "ACE Docker Simulator: Fuuz title card"
+    },
+    "description": [
+      "Part of ACE (Auto Contextualization Engine) from the Fuuz Industrial Operations Platform. Five containers stand up an OPC UA server with 88 simulated tags across 8 units (with realistic COMMS, STALE, FLATLINE and DRIFT faults), a MongoDB time-series historian, a Fuuz-shaped GraphQL API, an OPC UA-to-historian bridge and an operations console.",
+      "No account, tenant or configuration is needed; Docker is the only prerequisite. An opt-in orchestrator runs ACE matching and classification against a live Fuuz tenant."
+    ],
+    "highlights": [
+      {
+        "title": "A running plant",
+        "body": "An OPC UA server with 88 simulated tags across 8 units, with realistic COMMS, STALE, FLATLINE and DRIFT faults."
+      },
+      {
+        "title": "A real historian",
+        "body": "MongoDB time-series storage, fed from OPC UA subscriptions with deadband and a sample on every quality change."
+      },
+      {
+        "title": "A Fuuz-shaped API",
+        "body": "A GraphQL API shaped like Fuuz's, plus an operations console at localhost:8081."
+      }
+    ],
+    "screenshots": []
+  },
+  "pricing": {
+    "model": "free",
+    "detail": "No cost."
+  },
+  "support": {
+    "email": "sales@fuuz.com",
+    "url": "https://github.com/Fuuz-Platform/ace-docker-simulator",
+    "sla": "No service level agreement. Supported once implemented by a Fuuz services professional or an approved Fuuz partner.",
+    "phone": ""
+  },
+  "security": {
+    "residency": "On the machine that runs the containers",
+    "external": true,
+    "externalDetail": "Only with the opt-in fuuz profile: it connects to the Fuuz tenant you configure (FUUZ_HOST, FUUZ_TENANT, FUUZ_TOKEN). By default nothing leaves your machine.",
+    "certs": "",
+    "notes": ""
+  },
+  "install": {
+    "prerequisites": [
+      "Docker with Docker Compose"
+    ],
+    "steps": [
+      {
+        "text": "Clone the repository: git clone https://github.com/Fuuz-Platform/ace-docker-simulator"
+      },
+      {
+        "text": "In the folder, run docker compose up -d: 5 containers, no configuration."
+      },
+      {
+        "text": "Open http://localhost:8081 for the operations console."
+      },
+      {
+        "text": "Optional: to match and classify against a live Fuuz tenant, fill in FUUZ_HOST, FUUZ_TENANT and FUUZ_TOKEN in .env, then run docker compose --profile fuuz up -d."
+      }
+    ],
+    "after": ""
+  }
+}
